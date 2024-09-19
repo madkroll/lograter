@@ -39,14 +39,16 @@ public class AbstractPerformanceCenterResultsReaderTest {
 
     @Test
     public void calculateLocalStartTimeInSecondsEpochSummerTime() {
+        // LRE logic for time in the results db uses zone-based time instead of UTC.
+        // Same table also contains time zone offset, which also considers DST.
+
         // The actual start time is 1:27:22 "Europe/Amsterdam" zone time (summer time)
         // date --date=@1508887642
         // Wed Oct  25 1:27:22 DST 2017
 
         final long startTimeInSecondsEpoch = 1508887642;
         final long timeZoneOffset = -3600;
-        final long dayLightTimeOffset = -3600;
-        final long expectedResult = startTimeInSecondsEpoch + timeZoneOffset + dayLightTimeOffset;
+        final long expectedResult = startTimeInSecondsEpoch + timeZoneOffset;
         long startTime = PerformanceCenterCalculator.calculateLocalStartTimeSecEpoch(startTimeInSecondsEpoch, timeZoneOffset);
         assertEquals(expectedResult, startTime);
     }

@@ -72,26 +72,17 @@ public final class PerformanceCenterCalculator {
     }
 
     public static long calculateLocalStartTimeSecEpoch(long testStartTimeSecEpoch, long timeZoneOffset) {
-
-        final long startTimeMs = testStartTimeSecEpoch * 1000;
         final ZoneId zoneId = ZoneId.systemDefault();
-        final boolean isDayLightSavingActive = DateUtils.isDayLightSavingActive(startTimeMs, zoneId);
-        // the offset is bigger because it seems HP is adding DST to epoch time???
-        final long dayLightSavingsOffset = isDayLightSavingActive ? -3600 : 0;
-
-        final long localStartTimeSecEpoch = testStartTimeSecEpoch + timeZoneOffset + dayLightSavingsOffset;
-
-        log.info("In [{}] {}: " +
-                        "StartTimeSecEpoch [{}] timeZoneOffset [{}] makes start time of test data [{}] ([{}] seconds since epoch)",
+        final long localStartTimeSecEpoch = testStartTimeSecEpoch + timeZoneOffset;
+        log.info("In [{}]: StartTimeSecEpoch [{}] timeZoneOffset [{}] makes start time of test data [{}] ([{}] seconds since epoch)",
                 zoneId.getId(),
-                isDayLightSavingActive ? "summer time (daylight saving time)   " : "winter time (no daylight saving time)",
                 testStartTimeSecEpoch,
                 timeZoneOffset,
                 DateUtils.formatToStandardDateTimeString(localStartTimeSecEpoch * 1000),
                 localStartTimeSecEpoch);
 
         return localStartTimeSecEpoch;
-	}
+    }
 
     public static double calculateGranularitySec(Double endTimeFirst, Double endTimeSecond) {
         return endTimeSecond - endTimeFirst;
